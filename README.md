@@ -5,17 +5,17 @@
 Do tego projektu użyjemy Pythona 3.8, a tak dogłębniej to jedną z jego bibliotek, a mianowicie pygame w wersji 2.0. Na nim oprzemy większość naszej gry.
 
 # Plan
--menu główne (Współpraca)
+-menu główne (Miłosz Kapłanek)
 
--grafika postaci (Współpraca)
+-grafika postaci (Tomasz Paruzel)
 
--animacje postaci
+-animacje postaci (Współpraca)
 
--design poziomów
+-design poziomów (Tomasz Paruzel)
 
--Fizyka gry
+-Fizyka gry (Miłosz Kapłanek)
 
--przeciwnicy i implementacja ich zachowania
+-przeciwnicy i implementacja ich zachowania (Tomasz Paruzel-design, Miłosz Kapłanek - zachowanie)
 
 -zapis gry (opcjonalnie) (Współpraca)
 

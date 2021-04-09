@@ -20,3 +20,8 @@ Do tego projektu użyjemy Pythona 3.8, a tak dogłębniej to jedną z jego bibli
 -zapis gry (opcjonalnie) (Współpraca)
 
 -efekty dźwiękowe (Współpraca)
+
+# Prace(raport II)
+W aktualnej wersji alpha zostałostworzone Menu główne, pioerwszy(prototypowy poziom) na którym jest póki co testowane działanie sterowania gracza oraz zachowanie przeciwników czy samo działanie elementów jak "wygrana" czy "przegrana". Pierwsze ktatki przeciwników, z których będą stworzone w kolejnych krokach animacje.
+
+Na ten moment mamy działające menu, pare zakładek, początkowe grafiki oraz kolizje między graczema jego przeciwnikiem lub nagrodą.

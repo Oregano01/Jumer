@@ -9,9 +9,9 @@ Do tego projektu użyjemy Pythona 3.8, a tak dogłębniej to jedną z jego bibli
 
 -grafika postaci (Tomasz Paruzel)
 
--animacje postaci (Współpraca)
+-animacje postaci (Tomasz Paruzel)
 
--design poziomów (Tomasz Paruzel)
+-design poziomów (Tomasz Paruzel, Miłosz Kapłanek)
 
 -Fizyka gry (Miłosz Kapłanek, Tomasz Paruzel)
 

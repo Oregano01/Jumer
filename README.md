@@ -26,7 +26,7 @@ W aktualnej wersji alpha zostałostworzone Menu główne, pioerwszy(prototypowy 
 
 Na ten moment mamy działające menu, pare zakładek, początkowe grafiki oraz kolizje między graczema jego przeciwnikiem lub nagrodą.
 
-#Prace (Prototyp)
+# Prace (Prototyp)
 
 W naszej bierzącej wersji gry została zmieniona grafika, wyhląd poziomów jak i postacijest zrobiona z większą  dokładnością. 
 Aktualnie pracujemy nad stworzeniem kolizji z obiektami, platformami, po których nasza postac będzie mogła skakać tak dotrzećdo "nagrody" bądź uniknąć przeciwnika.

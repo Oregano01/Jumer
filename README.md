@@ -28,7 +28,8 @@ Na ten moment mamy działające menu, pare zakładek, początkowe grafiki oraz k
 
 # Prace (Prototyp)
 
-W naszej bierzącej wersji gry została zmieniona grafika, wyhląd poziomów jak i postacijest zrobiona z większą  dokładnością. 
+W naszej bierzącej wersji gry została zmieniona grafika, wygląd poziomów jak i postaci jest zrobiona z większą  dokładnością.
+Animacje są tworzone w programie Affinity Designer. Każda klatka jest osobno edytowana i eksportowana do pliku PNG.
 Aktualnie pracujemy nad stworzeniem kolizji z obiektami, platformami, po których nasza postac będzie mogła skakać tak dotrzećdo "nagrody" bądź uniknąć przeciwnika.
 
 Aktualnie zaimplementowane element do gry:
@@ -40,3 +41,7 @@ Aktualnie zaimplementowane element do gry:
 -Skok jako element grawitacji postaci i gry - DO ZROBIENIA kolizja z platrformami, po których gracz będzie się przemieszczał
 
 -Optymalizacja kodu, wprowadzenie klas - DO ZROBIENIA wyjęcie głównej funkcji "running" z definicji
+
+Do Zrobienia
+
+**DO ZROBIENIA zakładka wyboru poziomu w menu głównym**

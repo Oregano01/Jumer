@@ -32,16 +32,30 @@ W naszej bierzącej wersji gry została zmieniona grafika, wygląd poziomów jak
 Animacje są tworzone w programie Affinity Designer. Każda klatka jest osobno edytowana i eksportowana do pliku PNG.
 Aktualnie pracujemy nad stworzeniem kolizji z obiektami, platformami, po których nasza postac będzie mogła skakać tak dotrzećdo "nagrody" bądź uniknąć przeciwnika.
 
+Głównym problemem było wyjęcie 
+
 Aktualnie zaimplementowane element do gry:
 
--Animacje postaci oraz "nagrody" - DO ZROBIENIA więcej klatek animacji, aby były płynniejsze oraz dokładniejsze,a tick rate mógłbyc stały w granicach 60 fps dla lepszej płynności 
+-Animacje postaci oraz "nagrody"
 
--Zmiana poziomów po ditarciu do końca mapy - DO ZROBIENIA zakładka wyboru poziomu w menu głównym
+-Zmiana poziomów po ditarciu do końca mapy 
 
--Skok jako element grawitacji postaci i gry - DO ZROBIENIA kolizja z platrformami, po których gracz będzie się przemieszczał
+-Skok jako element grawitacji postaci i gry
 
--Optymalizacja kodu, wprowadzenie klas - DO ZROBIENIA wyjęcie głównej funkcji "running" z definicji
+-Optymalizacja kodu, wprowadzenie klas
 
-Do Zrobienia
+# Do Zrobienia
 
-**DO ZROBIENIA zakładka wyboru poziomu w menu głównym**
+-Zakładka wyboru poziomu w menu głównym
+
+-Kolizja z platrformami, po których gracz będzie się przemieszczał
+
+-Więcej klatek animacji, aby były płynniejsze oraz dokładniejsze,a tick rate mógłbyc stały w granicach 60 fps dla lepszej płynności 
+ 
+-Wyjęcie głównej funkcji "running" z definicji
+ 
+-Efekty dźwiękowe(opcjonalne)
+
+-Zapisy Gry(opcjonalne)
+ 
+ 

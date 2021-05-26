@@ -8,9 +8,10 @@ mainClock = py.time.Clock()
 py.init()
 py.display.set_caption('Jumper')
 screen = py.display.set_mode((800, 600), 0, 32)
-font = py.font.SysFont(None, 40)
+font_A = py.font.SysFont(None, 40)
 font_S = py.font.SysFont(None, 20)
 font_B = py.font.SysFont(None, 60)
+click = False
 
 
 class Portal(py.sprite.Sprite):                     # klasa odpowiedzialna za pozycje naszego portalu
@@ -123,7 +124,7 @@ class Gracz(object):
         self.height = height
         self.move = 9
         self.jump = False
-        self.jumpcount = 8
+        self.jumpcount = 9
         self.left = False
         self.right = False
         self.walk = 0
@@ -140,6 +141,50 @@ class Gracz(object):
         else:
             screen.blit(self.stoi, (self.x, self.y))
 
+    def ruch(self):
+
+        keys = py.key.get_pressed()
+        if (keys[py.K_a] or keys[py.K_LEFT]) and self.x > self.move:
+            self.x -= self.move
+            self.left = True
+            self.right = False
+        elif (keys[py.K_d] or keys[py.K_RIGHT]) and self.x < screen.get_width() - self.width:
+            self.x += self.move
+            self.left = False
+            self.right = True
+        else:
+            self.right = False
+            self.left = False
+            self.walk = 0
+
+        if not self.jump:
+            if keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]:
+                self.jump = True
+                self.right = False
+                self.left = False
+        else:
+            if self.jumpcount >= -9:
+                neg = 1
+                if self.jumpcount < 0:
+                    neg = -1
+                self.y -= (self.jumpcount ** 2) * 0.5 * neg
+                self.jumpcount -= 1
+            else:
+                self.jump = False
+                self.jumpcount = 9
+
+
+class Blok(object):
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def draw(self):
+        platforma = py.Rect(self.x, self.y, self.width, self.height)
+        py.draw.rect(screen, (168, 168, 168), platforma)
+
 
 def draw_text(text, font, color, surface, x, y):
 
@@ -147,9 +192,6 @@ def draw_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect()
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
-
-
-click = False
 
 
 def main_menu():
@@ -186,10 +228,10 @@ def main_menu():
         py.draw.rect(screen, (131, 131, 131), button_3)
         py.draw.rect(screen, (100, 100, 100), button_6)
 
-        draw_text('GRAJ!', font, (100, 31, 31), screen, 355, 213)
-        draw_text('Opcje', font, (100, 31, 31), screen, 355, 311)
-        draw_text('Zakończ', font, (100, 31, 31), screen, 345, 412)
-        draw_text('Twórcy', font, (120, 30, 30), screen, 675, 573)
+        draw_text('GRAJ!', font_A, (100, 31, 31), screen, 355, 213)
+        draw_text('Opcje', font_A, (100, 31, 31), screen, 355, 311)
+        draw_text('Zakończ', font_A, (100, 31, 31), screen, 345, 412)
+        draw_text('Twórcy', font_A, (120, 30, 30), screen, 675, 573)
 
         click = False
         for event in py.event.get():
@@ -208,6 +250,28 @@ def main_menu():
         mainClock.tick(60)
 
 
+def przycisk_main(x, y):
+    global click
+    mx, my = py.mouse.get_pos()
+    button_5 = py.Rect(x, y, 100, 25)
+    py.draw.rect(screen, (168, 177, 217), button_5)
+    draw_text('Menu Główne', font_S, (48, 74, 253), screen, x + 10, y + 5)
+
+    if button_5.collidepoint((mx, my)):
+        if click:
+            main_menu()
+    for event in py.event.get():
+        if event.type == QUIT:
+            py.quit()
+            sys.exit(0)
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                main_menu()
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 1:
+                click = True
+
+
 def level_1():
     global click
     click = False
@@ -215,24 +279,25 @@ def level_1():
     running = True
 
     # dane pozycji i rozmiaru gracza
-    y_chopek = 480
+    y_chopek = 500
     x_chopek = 640
     chopek_width = 25
     chopek_height = 64
 
     # dane pozycji i rozmiaru przeciwnika
-    y_wrog_1 = 480
+    y_wrog_1 = 500
     x_wrog_1 = 220
     wrog_width = 46
     wrog_height = 63
 
     # dane pozycji i rozmiaru portalu
-    x_nagroda = 20
-    y_nagroda = 450
+    x_nagroda = 130
+    y_nagroda = 470
     nagroda_width = 70
     nagroda_height = 100
 
     # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
+
     animacje = py.sprite.Group()
     nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
     wrog_1 = Przeciwnik(x_wrog_1, y_wrog_1, wrog_width, wrog_height, 600)
@@ -241,11 +306,7 @@ def level_1():
 
     while running:
 
-        mx, my = py.mouse.get_pos()
-
         tlo = py.image.load('tła/tło 1.png')
-
-        button_5 = py.Rect(700, 5, 100, 25)
 
         screen.fill((0, 0, 0))
         screen.blit(tlo, (0, 0))
@@ -254,45 +315,16 @@ def level_1():
         wrog_1.draw()
         chopek.draw()
 
-        py.draw.rect(screen, (168, 177, 217), button_5)
-        draw_text('Menu Główne', font_S, (48, 74, 253), screen, 710, 10)
+        # przycisk Main Menu
+
+        przycisk_main(700, 5)
 
         py.display.update()
         mainClock.tick(60)
 
         # ruch gracza
 
-        keys = py.key.get_pressed()
-        if (keys[py.K_a] or keys[py.K_LEFT]) and chopek.x > chopek.move:
-            chopek.x -= chopek.move
-            chopek.left = True
-            chopek.right = False
-        elif (keys[py.K_d] or keys[py.K_RIGHT]) and chopek.x < screen.get_width() - chopek.width:
-            chopek.x += chopek.move
-            chopek.left = False
-            chopek.right = True
-        else:
-            chopek.right = False
-            chopek.left = False
-            chopek.walk = 0
-
-        # skok gracza
-
-        if not chopek.jump:
-            if keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]:
-                chopek.jump = True
-                chopek.right = False
-                chopek.left = False
-        else:
-            if chopek.jumpcount >= -8:
-                neg = 1
-                if chopek.jumpcount < 0:
-                    neg = -1
-                chopek.y -= (chopek.jumpcount ** 2) * 0.5 * neg
-                chopek.jumpcount -= 1
-            else:
-                chopek.jump = False
-                chopek.jumpcount = 8
+        chopek.ruch()
 
         # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
 
@@ -305,27 +337,11 @@ def level_1():
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x and chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text(' Gratuluję, kolejny poziom na ciebie czeka! :) ', font, (255, 0, 0), screen, 100, 300)
+            draw_text(' Gratuluję, kolejny poziom na ciebie czeka! :) ', font_A, (255, 0, 0), screen, 100, 300)
             py.display.flip()
             time.sleep(3)
 
             level_2()
-
-            # obsługa przycisków w tym momencie przycisku Main menu
-
-        if button_5.collidepoint((mx, my)):
-            if click:
-                main_menu()
-        for event in py.event.get():
-            if event.type == QUIT:
-                py.quit()
-                sys.exit(0)
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    main_menu()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
 
         py.display.flip()
         mainClock.tick(60)
@@ -366,23 +382,19 @@ def level_2():
     animacje.add(nagroda)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
 
-   # x_block_1 = 475
-   # y_block_1 = 400
-   # block_width_1 = 50
-   # block_height_1 = 20
+    # x_block_1 = 475
+    # y_block_1 = 400
+    # block_width_1 = 50
+    # block_height_1 = 20
 
-   # x_block_2 = 275
-   # y_block_2 = 400
-   # block_width_2 = 50
-   # block_height_2 = 20
+    # x_block_2 = 275
+    # y_block_2 = 400
+    # block_width_2 = 50
+    # block_height_2 = 20
 
     while running:
 
-        mx, my = py.mouse.get_pos()
-
         tlo = py.image.load('tła/tło 2.png')
-
-        button_5 = py.Rect(700, 5, 100, 25)
 
         screen.fill((0, 0, 0))
         screen.blit(tlo, (0, 0))
@@ -392,48 +404,19 @@ def level_2():
         wrog_2.draw()
         chopek.draw()
 
-      #  Block_1 = py.Rect(x_block_1, y_block_1, block_width_1, block_height_1)
-      #  Block_2 = py.Rect(x_block_2, y_block_2, block_width_2, block_height_2)
+        # przycisk Main Menu
 
-        py.draw.rect(screen, (168, 177, 217), button_5)
-        draw_text('Menu Główne', font_S, (48, 74, 253), screen, 710, 10)
+        przycisk_main(700, 5)
+
+        # Block_1 = py.Rect(x_block_1, y_block_1, block_width_1, block_height_1)
+        # Block_2 = py.Rect(x_block_2, y_block_2, block_width_2, block_height_2)
 
         py.display.update()
         mainClock.tick(60)
 
         # ruch gracza
 
-        keys = py.key.get_pressed()
-        if (keys[py.K_a] or keys[py.K_LEFT]) and chopek.x > chopek.move:
-            chopek.x -= chopek.move
-            chopek.left = True
-            chopek.right = False
-        elif (keys[py.K_d] or keys[py.K_RIGHT]) and chopek.x < screen.get_width() - chopek.width:
-            chopek.x += chopek.move
-            chopek.left = False
-            chopek.right = True
-        else:
-            chopek.right = False
-            chopek.left = False
-            chopek.walk = 0
-
-        # skok gracza
-
-        if not chopek.jump:
-            if keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]:
-                chopek.jump = True
-                chopek.right = False
-                chopek.left = False
-        else:
-            if chopek.jumpcount >= -8:
-                neg = 1
-                if chopek.jumpcount < 0:
-                    neg = -1
-                chopek.y -= (chopek.jumpcount ** 2) * 0.5 * neg
-                chopek.jumpcount -= 1
-            else:
-                chopek.jump = False
-                chopek.jumpcount = 8
+        chopek.ruch()
 
         # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
 
@@ -455,27 +438,13 @@ def level_2():
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x and chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('BRAWO!!! Gratuluje przejścia poziomu :D', font, (255, 0, 0), screen, 100, 300)
+            draw_text('BRAWO!!! Gratuluje przejścia poziomu :D', font_A, (255, 0, 0), screen, 100, 300)
             py.display.flip()
             time.sleep(3)
 
             level_3()
 
             # obsługa przycisków w tym momencie przycisku Main menu
-
-        if button_5.collidepoint((mx, my)):
-            if click:
-                main_menu()
-        for event in py.event.get():
-            if event.type == QUIT:
-                py.quit()
-                sys.exit(0)
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    main_menu()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
 
         py.display.flip()
         mainClock.tick(60)
@@ -509,6 +478,12 @@ def level_3():
     nagroda_width = 70
     nagroda_height = 100
 
+    # dane pozycji i rozmiaru platformy
+    x_block_1 = 475
+    y_block_1 = 400
+    block_width_1 = 50
+    block_height_1 = 20
+
     # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
     animacje = py.sprite.Group()
     nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
@@ -516,24 +491,11 @@ def level_3():
     wrog_2 = Przeciwnik(x_wrog_2, y_wrog_2, wrog_width, wrog_height, 500)
     animacje.add(nagroda)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
-
-    # x_block_1 = 475
-    # y_block_1 = 400
-    # block_width_1 = 50
-    # block_height_1 = 20
-
-    # x_block_2 = 275
-    # y_block_2 = 400
-    # block_width_2 = 50
-    # block_height_2 = 20
+    platforma = Blok(x_block_1, y_block_1, block_width_1, block_height_1)
 
     while running:
 
-        mx, my = py.mouse.get_pos()
-
         tlo = py.image.load('tła/tło 3.png')
-
-        button_5 = py.Rect(700, 5, 100, 25)
 
         screen.fill((0, 0, 0))
         screen.blit(tlo, (0, 0))
@@ -542,49 +504,18 @@ def level_3():
         wrog_1.draw()
         wrog_2.draw()
         chopek.draw()
+        platforma.draw()
 
-        #  Block_1 = py.Rect(x_block_1, y_block_1, block_width_1, block_height_1)
-        #  Block_2 = py.Rect(x_block_2, y_block_2, block_width_2, block_height_2)
+        # przycisk Main Menu
 
-        py.draw.rect(screen, (168, 177, 217), button_5)
-        draw_text('Menu Główne', font_S, (48, 74, 253), screen, 710, 10)
+        przycisk_main(700, 5)
 
         py.display.update()
         mainClock.tick(60)
 
         # ruch gracza
 
-        keys = py.key.get_pressed()
-        if (keys[py.K_a] or keys[py.K_LEFT]) and chopek.x > chopek.move:
-            chopek.x -= chopek.move
-            chopek.left = True
-            chopek.right = False
-        elif (keys[py.K_d] or keys[py.K_RIGHT]) and chopek.x < screen.get_width() - chopek.width:
-            chopek.x += chopek.move
-            chopek.left = False
-            chopek.right = True
-        else:
-            chopek.right = False
-            chopek.left = False
-            chopek.walk = 0
-
-        # skok gracza
-
-        if not chopek.jump:
-            if keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]:
-                chopek.jump = True
-                chopek.right = False
-                chopek.left = False
-        else:
-            if chopek.jumpcount >= -8:
-                neg = 1
-                if chopek.jumpcount < 0:
-                    neg = -1
-                chopek.y -= (chopek.jumpcount ** 2) * 0.5 * neg
-                chopek.jumpcount -= 1
-            else:
-                chopek.jump = False
-                chopek.jumpcount = 8
+        chopek.ruch()
 
         # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
 
@@ -606,27 +537,11 @@ def level_3():
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x and chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('WOOOW gratulacje ukończenia gry.', font, (255, 0, 0), screen, 100, 300)
+            draw_text('WOOOW gratulacje ukończenia gry.', font_A, (255, 0, 0), screen, 100, 300)
             py.display.flip()
             time.sleep(3)
 
             main_menu()
-
-            # obsługa przycisków w tym momencie przycisku Main menu
-
-        if button_5.collidepoint((mx, my)):
-            if click:
-                main_menu()
-        for event in py.event.get():
-            if event.type == QUIT:
-                py.quit()
-                sys.exit(0)
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    main_menu()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
 
         py.display.flip()
         mainClock.tick(60)
@@ -639,12 +554,10 @@ def options():
     click = False
 
     while running:
-        mx, my = py.mouse.get_pos()
+
         screen.fill((0, 0, 0))
-        draw_text('Cel gry oraz sterowanie', font, (255, 255, 255), screen, 20, 20)
-        button_4 = py.Rect(18, 490, 150, 50)
-        py.draw.rect(screen, (255, 0, 0), button_4)
-        draw_text(' <-- Powrót ', font, (255, 255, 255), screen, 20, 500)
+        draw_text('Cel gry oraz sterowanie', font_A, (255, 255, 255), screen, 20, 20)
+
         draw_text(
             ' Celem gry jest dojście do teleportu, który znajduje się na '
             ' końcu danego poziomu oraz przenisie nas na kolejny.',
@@ -659,19 +572,7 @@ def options():
 
         # obsługa przycisków w tym momencie przycisku Main menu
 
-        if button_4.collidepoint((mx, my)):
-            if click:
-                main_menu()
-        for event in py.event.get():
-            if event.type == QUIT:
-                py.quit()
-                sys.exit(0)
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    main_menu()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
+        przycisk_main(700, 5)
 
         py.display.update()
         mainClock.tick(60)
@@ -684,31 +585,15 @@ def tworcy():
     click = False
 
     while running:
-        mx, my = py.mouse.get_pos()
         tlo = py.image.load('tła/tło_twórcy.png')
         screen.fill((0, 0, 0))
         screen.blit(tlo, (0, 0))
         draw_text(' Miłosz Kapłanek ', font_B, (15, 69, 29), screen, 230, 200)
         draw_text(' Tomasz Paruzel', font_B, (15, 59, 29), screen, 230, 300)
-        button_7 = py.Rect(18, 490, 150, 50)
-        py.draw.rect(screen, (148, 176, 255), button_7)
-        draw_text(' <-- Powrót ', font, (120, 20, 20), screen, 20, 500)
 
         # obsługa przycisków w tym momencie przycisku powrót do Main menu
 
-        if button_7.collidepoint((mx, my)):
-            if click:
-                main_menu()
-        for event in py.event.get():
-            if event.type == QUIT:
-                py.quit()
-                sys.exit(0)
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    main_menu()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
+        przycisk_main(700, 5)
 
         py.display.update()
         mainClock.tick(60)

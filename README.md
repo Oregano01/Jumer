@@ -38,7 +38,7 @@ Aktualnie zaimplementowane element do gry:
 
 -Animacje postaci oraz "nagrody"
 
--Zmiana poziomów po ditarciu do końca mapy 
+-Zmiana poziomów po dotarciu do końca mapy 
 
 -Skok jako element grawitacji postaci i gry
 

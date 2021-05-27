@@ -296,12 +296,19 @@ def level_1():
     nagroda_width = 70
     nagroda_height = 100
 
+    # dane pozycji i rozmiaru platformy
+    x_block_1 = 475
+    y_block_1 = 420
+    block_width_1 = 50
+    block_height_1 = 20
+
     # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
 
     animacje = py.sprite.Group()
     nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
     wrog_1 = Przeciwnik(x_wrog_1, y_wrog_1, wrog_width, wrog_height, 600)
     animacje.add(nagroda)
+    platforma = Blok(x_block_1, y_block_1, block_width_1, block_height_1)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
 
     while running:
@@ -313,11 +320,8 @@ def level_1():
         animacje.draw(screen)
         animacje.update()
         wrog_1.draw()
+        platforma.draw()
         chopek.draw()
-
-        # przycisk Main Menu
-
-        przycisk_main(700, 5)
 
         py.display.update()
         mainClock.tick(60)
@@ -342,6 +346,10 @@ def level_1():
             time.sleep(3)
 
             level_2()
+
+        # przycisk Main Menu
+
+        przycisk_main(700, 5)
 
         py.display.flip()
         mainClock.tick(60)
@@ -382,16 +390,6 @@ def level_2():
     animacje.add(nagroda)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
 
-    # x_block_1 = 475
-    # y_block_1 = 400
-    # block_width_1 = 50
-    # block_height_1 = 20
-
-    # x_block_2 = 275
-    # y_block_2 = 400
-    # block_width_2 = 50
-    # block_height_2 = 20
-
     while running:
 
         tlo = py.image.load('tła/tło 2.png')
@@ -403,13 +401,6 @@ def level_2():
         wrog_1.draw()
         wrog_2.draw()
         chopek.draw()
-
-        # przycisk Main Menu
-
-        przycisk_main(700, 5)
-
-        # Block_1 = py.Rect(x_block_1, y_block_1, block_width_1, block_height_1)
-        # Block_2 = py.Rect(x_block_2, y_block_2, block_width_2, block_height_2)
 
         py.display.update()
         mainClock.tick(60)
@@ -444,7 +435,9 @@ def level_2():
 
             level_3()
 
-            # obsługa przycisków w tym momencie przycisku Main menu
+        # przycisk Main Menu
+
+        przycisk_main(700, 5)
 
         py.display.flip()
         mainClock.tick(60)
@@ -506,10 +499,6 @@ def level_3():
         chopek.draw()
         platforma.draw()
 
-        # przycisk Main Menu
-
-        przycisk_main(700, 5)
-
         py.display.update()
         mainClock.tick(60)
 
@@ -543,6 +532,10 @@ def level_3():
 
             main_menu()
 
+        # przycisk Main Menu
+
+        przycisk_main(700, 5)
+
         py.display.flip()
         mainClock.tick(60)
 
@@ -570,7 +563,7 @@ def options():
         draw_text(' D - ruch w prawo ', font_S, (255, 255, 255), screen, 60, 220)
         draw_text(' W - skok ', font_S, (255, 255, 255), screen, 60, 250)
 
-        # obsługa przycisków w tym momencie przycisku Main menu
+        # przycisk Main Menu
 
         przycisk_main(700, 5)
 
@@ -591,7 +584,7 @@ def tworcy():
         draw_text(' Miłosz Kapłanek ', font_B, (15, 69, 29), screen, 230, 200)
         draw_text(' Tomasz Paruzel', font_B, (15, 59, 29), screen, 230, 300)
 
-        # obsługa przycisków w tym momencie przycisku powrót do Main menu
+        # przycisk Main Menu
 
         przycisk_main(700, 5)
 

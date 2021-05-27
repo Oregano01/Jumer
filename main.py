@@ -123,8 +123,8 @@ class Gracz(object):
         self.width = width
         self.height = height
         self.move = 9
-        self.jump = False
-        self.jumpcount = 9
+        self.jump = 0
+        self.jumped = False
         self.left = False
         self.right = False
         self.walk = 0
@@ -142,6 +142,7 @@ class Gracz(object):
             screen.blit(self.stoi, (self.x, self.y))
 
     def ruch(self):
+        dy = 0
 
         keys = py.key.get_pressed()
         if (keys[py.K_a] or keys[py.K_LEFT]) and self.x > self.move:
@@ -157,25 +158,29 @@ class Gracz(object):
             self.left = False
             self.walk = 0
 
-        if not self.jump:
-            if keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]:
-                self.jump = True
-                self.right = False
-                self.left = False
-        else:
-            if self.jumpcount >= -9:
-                neg = 1
-                if self.jumpcount < 0:
-                    neg = -1
-                self.y -= (self.jumpcount ** 2) * 0.5 * neg
-                self.jumpcount -= 1
-            else:
-                self.jump = False
-                self.jumpcount = 9
+        # skok gracza i grawitacja
+
+        if (keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w])\
+                and self.jumped is False:
+            self.jump = -16
+            self.jumped = True
+        if keys[py.K_SPACE] or keys[py.K_UP or keys[py.K_w]]:
+            self.jumped = False
+
+        self.jump += 1
+        if self.jump > 10:
+            self.jump = 10
+        dy += self.jump
+
+        self.y += dy
+
+        if self.y + self.height > 565:
+            self.y = 565 - self.height
 
 
 class Blok(object):
     def __init__(self, x, y, width, height):
+        super().__init__()
         self.x = x
         self.y = y
         self.width = width
@@ -276,8 +281,6 @@ def level_1():
     global click
     click = False
 
-    running = True
-
     # dane pozycji i rozmiaru gracza
     y_chopek = 500
     x_chopek = 640
@@ -297,8 +300,8 @@ def level_1():
     nagroda_height = 100
 
     # dane pozycji i rozmiaru platformy
-    x_block_1 = 475
-    y_block_1 = 420
+    x_block_1 = 476
+    y_block_1 = 430
     block_width_1 = 50
     block_height_1 = 20
 
@@ -311,6 +314,8 @@ def level_1():
     platforma = Blok(x_block_1, y_block_1, block_width_1, block_height_1)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
 
+    running = True
+
     while running:
 
         tlo = py.image.load('tła/tło 1.png')
@@ -319,6 +324,7 @@ def level_1():
         screen.blit(tlo, (0, 0))
         animacje.draw(screen)
         animacje.update()
+        przycisk_main(700, 5)
         wrog_1.draw()
         platforma.draw()
         chopek.draw()
@@ -347,10 +353,6 @@ def level_1():
 
             level_2()
 
-        # przycisk Main Menu
-
-        przycisk_main(700, 5)
-
         py.display.flip()
         mainClock.tick(60)
 
@@ -362,23 +364,23 @@ def level_2():
     running = True
 
     # dane pozycji i rozmiaru gracza
-    y_chopek = 480
+    y_chopek = 500
     x_chopek = 640
     chopek_width = 25
     chopek_height = 64
 
-    # dane pozycji i rozmiaru przeciwników
-    y_wrog_1 = 480
-    x_wrog_1 = 360
+    # dane pozycji i rozmiaru przeciwnika
+    y_wrog_1 = 500
+    x_wrog_1 = 220
     wrog_width = 46
     wrog_height = 63
 
-    y_wrog_2 = 480
-    x_wrog_2 = 220
+    y_wrog_2 = 500
+    x_wrog_2 = 200
 
     # dane pozycji i rozmiaru portalu
     x_nagroda = 20
-    y_nagroda = 450
+    y_nagroda = 470
     nagroda_width = 70
     nagroda_height = 100
 
@@ -398,6 +400,7 @@ def level_2():
         screen.blit(tlo, (0, 0))
         animacje.draw(screen)
         animacje.update()
+        przycisk_main(700, 5)
         wrog_1.draw()
         wrog_2.draw()
         chopek.draw()
@@ -435,10 +438,6 @@ def level_2():
 
             level_3()
 
-        # przycisk Main Menu
-
-        przycisk_main(700, 5)
-
         py.display.flip()
         mainClock.tick(60)
 
@@ -457,17 +456,17 @@ def level_3():
     chopek_height = 64
 
     # dane pozycji i rozmiaru przeciwników
-    y_wrog_1 = 480
+    y_wrog_1 = 500
     x_wrog_1 = 360
     wrog_width = 46
     wrog_height = 63
 
-    y_wrog_2 = 480
+    y_wrog_2 = 500
     x_wrog_2 = 120
 
     # dane pozycji i rozmiaru portalu
     x_nagroda = 20
-    y_nagroda = 450
+    y_nagroda = 480
     nagroda_width = 70
     nagroda_height = 100
 
@@ -494,6 +493,7 @@ def level_3():
         screen.blit(tlo, (0, 0))
         animacje.draw(screen)
         animacje.update()
+        przycisk_main(700, 5)
         wrog_1.draw()
         wrog_2.draw()
         chopek.draw()
@@ -531,10 +531,6 @@ def level_3():
             time.sleep(3)
 
             main_menu()
-
-        # przycisk Main Menu
-
-        przycisk_main(700, 5)
 
         py.display.flip()
         mainClock.tick(60)

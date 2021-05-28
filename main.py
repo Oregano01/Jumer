@@ -8,9 +8,9 @@ mainClock = py.time.Clock()
 py.init()
 py.display.set_caption('Jumper')
 screen = py.display.set_mode((800, 600), 0, 32)
-font_A = py.font.SysFont(None, 40)
-font_S = py.font.SysFont(None, 20)
-font_B = py.font.SysFont(None, 60)
+font_A = py.font.SysFont('None', 40)
+font_S = py.font.SysFont('None', 20)
+font_B = py.font.SysFont('None', 60)
 click = False
 
 
@@ -56,7 +56,6 @@ class Przeciwnik(py.sprite.Sprite):             # klasa odpowiedzialna za dział
                        py.image.load('elementy/M9.png'), py.image.load('elementy/M10.png')]
         self.aktualna_klatka = 0
         self.image = self.klatki[self.aktualna_klatka]
-
         self.rect = self.image.get_rect()
         self.rect.topleft = [x, y]
 
@@ -100,7 +99,55 @@ class Przeciwnik(py.sprite.Sprite):             # klasa odpowiedzialna za dział
 
 
 class Flame(object):
-    pass
+    def __init__(self, x, y, width, height, granica):
+        super().__init__()
+        self.klatki = [py.image.load('elementy/M1.png'), py.image.load('elementy/M2.png'),
+                       py.image.load('elementy/M3.png'), py.image.load('elementy/M4.png'),
+                       py.image.load('elementy/M5.png'), py.image.load('elementy/M6.png'),
+                       py.image.load('elementy/M7.png'), py.image.load('elementy/M8.png'),
+                       py.image.load('elementy/M9.png'), py.image.load('elementy/M10.png')]
+        self.aktualna_klatka = 0
+        self.image = self.klatki[self.aktualna_klatka]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = [x, y]
+
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.granica = granica
+        self.droga = [self.y, self.granica]
+        self.walk = 0
+        self.predkosc = 2
+
+    def draw(self):
+        self.move()
+        self.aktualna_klatka += 0.7
+        if self.aktualna_klatka >= len(self.klatki):
+            self.aktualna_klatka = 0
+        if self.walk + 1 >= 60:
+            self.walk = 0
+
+        if self.predkosc > 0:
+            screen.blit(self.klatki[int(self.aktualna_klatka // 3)], (self.x, self.y))
+            self.walk += 1
+        else:
+            screen.blit(self.klatki[int(self.aktualna_klatka // 3)], (self.x, self.y))
+            self.walk += 1
+
+    def move(self):
+        if self.predkosc > 0:
+            if self.y + self.predkosc < self.droga[1]:
+                self.y += self.predkosc
+            else:
+                self.predkosc = self.predkosc * -1
+                self.walk = 0
+        else:
+            if self.y - self.predkosc > self.droga[0]:
+                self.y += self.predkosc
+            else:
+                self.predkosc = self.predkosc * -1
+                self.walk = 0
 
 
 class Gracz(object):
@@ -128,6 +175,7 @@ class Gracz(object):
         self.left = False
         self.right = False
         self.walk = 0
+        self.in_air = False
 
     def draw(self):
         if self.walk + 1 >= 27:
@@ -160,16 +208,16 @@ class Gracz(object):
 
         # skok gracza i grawitacja
 
-        if (keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w])\
-                and self.jumped is False:
-            self.jump = -16
+        if (keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]) and self.jumped is False and self.in_air is False:
+            self.jump = -25
             self.jumped = True
-        if keys[py.K_SPACE] or keys[py.K_UP or keys[py.K_w]]:
+            self.in_air = True
+        if (keys[py.K_SPACE] or keys[py.K_UP] or keys[py.K_w]) and self.jumped is not False:
             self.jumped = False
 
-        self.jump += 1
+        self.jump += 2
         if self.jump > 10:
-            self.jump = 10
+            self.jump = 20
         dy += self.jump
 
         self.y += dy
@@ -177,18 +225,54 @@ class Gracz(object):
         if self.y + self.height > 565:
             self.y = 565 - self.height
 
+        # kolizja z platformami
+
+        if (self.x + self.width) > platforma.x and self.x < (platforma.x + platforma.width)\
+                and platforma.y < (self.y + self.height) < (platforma.y + platforma.height):
+            print('jest')
+            self.y = platforma.y - self.height
+            self.jump = 0
+            self.in_air = False
+
+        if (self.x + self.width) > platforma2.x and self.x < (platforma2.x + platforma2.width) \
+                and platforma2.y < (self.y + self.height) < (platforma2.y + platforma2.height):
+            self.y = platforma2.y - self.height
+            self.jump = 0
+            self.in_air = False
+
+        if (self.x + self.width) > platforma3.x and self.x < (platforma3.x + platforma3.width) \
+                and platforma3.y < (self.y + self.height) < (platforma3.y + platforma3.height):
+            self.y = platforma3.y - self.height
+            self.jump = 0
+            self.in_air = False
+
+        if (self.x + self.width) > platforma4.x and self.x < (platforma4.x + platforma4.width) \
+                and platforma4.y < (self.y + self.height) < (platforma4.y + platforma4.height):
+            self.y = platforma4.y - self.height
+            self.jump = 0
+            self.in_air = False
+
+        if (self.x + self.width) > platforma5.x and self.x < (platforma5.x + platforma5.width) \
+                and platforma5.y < (self.y + self.height) < (platforma5.y + platforma5.height):
+            self.y = platforma5.y - self.height
+            self.jump = 0
+            self.in_air = False
+
+    def on_the_ground(self):
+        if self.y >= 500:
+            self.in_air = False
+
 
 class Blok(object):
     def __init__(self, x, y, width, height):
-        super().__init__()
         self.x = x
         self.y = y
         self.width = width
         self.height = height
 
     def draw(self):
-        platforma = py.Rect(self.x, self.y, self.width, self.height)
-        py.draw.rect(screen, (168, 168, 168), platforma)
+        bloczek = py.Rect(self.x, self.y, self.width, self.height)
+        py.draw.rect(screen, (168, 168, 168), bloczek)
 
 
 def draw_text(text, font, color, surface, x, y):
@@ -277,8 +361,25 @@ def przycisk_main(x, y):
                 click = True
 
 
+# dane pozycji i rozmiaru platformy
+
+x_block_1 = 476
+y_block_1 = 430
+block_width_1 = 50
+block_height_1 = 20
+
+x_block_2 = 280
+y_block_2 = 380
+
+x_block_3 = 40
+y_block_3 = 300
+block_width_3 = 80
+
+global platforma, platforma2, platforma3, platforma4, platforma5, platforma6
+
+
 def level_1():
-    global click
+    global click, platforma, platforma2, platforma3
     click = False
 
     # dane pozycji i rozmiaru gracza
@@ -294,16 +395,10 @@ def level_1():
     wrog_height = 63
 
     # dane pozycji i rozmiaru portalu
-    x_nagroda = 130
-    y_nagroda = 470
+    x_nagroda = 10
+    y_nagroda = 190
     nagroda_width = 70
     nagroda_height = 100
-
-    # dane pozycji i rozmiaru platformy
-    x_block_1 = 476
-    y_block_1 = 430
-    block_width_1 = 50
-    block_height_1 = 20
 
     # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
 
@@ -311,8 +406,12 @@ def level_1():
     nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
     wrog_1 = Przeciwnik(x_wrog_1, y_wrog_1, wrog_width, wrog_height, 600)
     animacje.add(nagroda)
-    platforma = Blok(x_block_1, y_block_1, block_width_1, block_height_1)
+
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
+
+    platforma = Blok(x_block_1, y_block_1, block_width_1, block_height_1)
+    platforma2 = Blok(x_block_2, y_block_2, block_width_1, block_height_1)
+    platforma3 = Blok(x_block_3, y_block_3, block_width_3, block_height_1)
 
     running = True
 
@@ -327,6 +426,8 @@ def level_1():
         przycisk_main(700, 5)
         wrog_1.draw()
         platforma.draw()
+        platforma2.draw()
+        platforma3.draw()
         chopek.draw()
 
         py.display.update()
@@ -335,6 +436,9 @@ def level_1():
         # ruch gracza
 
         chopek.ruch()
+        chopek.on_the_ground()
+
+        # platformy
 
         # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
 
@@ -358,7 +462,7 @@ def level_1():
 
 
 def level_2():
-    global click
+    global click, platforma, platforma2, platforma3, platforma4, platforma5, platforma6
     click = False
 
     running = True
@@ -375,12 +479,12 @@ def level_2():
     wrog_width = 46
     wrog_height = 63
 
-    y_wrog_2 = 500
-    x_wrog_2 = 200
+    y_wrog_2 = 310
+    x_wrog_2 = 260
 
     # dane pozycji i rozmiaru portalu
     x_nagroda = 20
-    y_nagroda = 470
+    y_nagroda = 210
     nagroda_width = 70
     nagroda_height = 100
 
@@ -388,9 +492,28 @@ def level_2():
     animacje = py.sprite.Group()
     nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
     wrog_1 = Przeciwnik(x_wrog_1, y_wrog_1, wrog_width, wrog_height, 600)
-    wrog_2 = Przeciwnik(x_wrog_2, y_wrog_2, wrog_width, wrog_height, 500)
+    wrog_2 = Przeciwnik(x_wrog_2, y_wrog_2, wrog_width, wrog_height, 440)
     animacje.add(nagroda)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
+
+    # dane dla platform
+    ax_block_1 = 476
+    ay_block_1 = 500
+    ablock_width_1 = 50
+    ablock_height_1 = 20
+
+    ax_block_2 = 280
+    ay_block_2 = 380
+    ablock_width_2 = 160
+
+    ax_block_3 = 40
+    ay_block_3 = 300
+    ablock_width_3 = 80
+
+    # położnie platform
+    platforma = Blok(ax_block_1, ay_block_1, ablock_width_1, ablock_height_1)
+    platforma2 = Blok(ax_block_2, ay_block_2, ablock_width_2, ablock_height_1)
+    platforma3 = Blok(ax_block_3, ay_block_3, ablock_width_3, ablock_height_1)
 
     while running:
 
@@ -401,6 +524,9 @@ def level_2():
         animacje.draw(screen)
         animacje.update()
         przycisk_main(700, 5)
+        platforma.draw()
+        platforma2.draw()
+        platforma3.draw()
         wrog_1.draw()
         wrog_2.draw()
         chopek.draw()
@@ -411,10 +537,12 @@ def level_2():
         # ruch gracza
 
         chopek.ruch()
+        chopek.on_the_ground()
 
         # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
 
-        if chopek.x < wrog_1.x + wrog_1.width and chopek.x + chopek.width > wrog_1.x and chopek.y >= wrog_1.y:
+        if chopek.x < wrog_1.x + wrog_1.width and chopek.x + chopek.width > wrog_1.x\
+                and wrog_1.y <= chopek.y < wrog_1.y + wrog_1.height/2:
             screen.fill((0, 0, 0))
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
@@ -422,7 +550,8 @@ def level_2():
             running = False
             main_menu()
 
-        if chopek.x < wrog_2.x + wrog_2.width and chopek.x + chopek.width > wrog_2.x and chopek.y >= wrog_2.y:
+        if chopek.x < wrog_2.x + wrog_2.width and chopek.x + chopek.width > wrog_2.x\
+                and wrog_2.y <= chopek.y < wrog_2.y + wrog_2.height/2:
             screen.fill((0, 0, 0))
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
@@ -470,12 +599,6 @@ def level_3():
     nagroda_width = 70
     nagroda_height = 100
 
-    # dane pozycji i rozmiaru platformy
-    x_block_1 = 475
-    y_block_1 = 400
-    block_width_1 = 50
-    block_height_1 = 20
-
     # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
     animacje = py.sprite.Group()
     nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
@@ -483,7 +606,6 @@ def level_3():
     wrog_2 = Przeciwnik(x_wrog_2, y_wrog_2, wrog_width, wrog_height, 500)
     animacje.add(nagroda)
     chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
-    platforma = Blok(x_block_1, y_block_1, block_width_1, block_height_1)
 
     while running:
 
@@ -505,10 +627,12 @@ def level_3():
         # ruch gracza
 
         chopek.ruch()
+        chopek.on_the_ground()
 
         # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
 
-        if chopek.x < wrog_1.x + wrog_1.width and chopek.x + chopek.width > wrog_1.x and chopek.y >= wrog_1.y:
+        if chopek.x < wrog_1.x + wrog_1.width and chopek.x + chopek.width > wrog_1.x\
+                and wrog_1.y <= chopek.y < wrog_1.y + wrog_1.height / 2:
             screen.fill((0, 0, 0))
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
@@ -516,7 +640,8 @@ def level_3():
             running = False
             main_menu()
 
-        if chopek.x < wrog_2.x + wrog_2.width and chopek.x + chopek.width > wrog_2.x and chopek.y >= wrog_2.y:
+        if chopek.x < wrog_2.x + wrog_2.width and chopek.x + chopek.width > wrog_2.x\
+                and wrog_2.y <= chopek.y < wrog_2.y + wrog_2.height / 2:
             screen.fill((0, 0, 0))
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
@@ -526,7 +651,231 @@ def level_3():
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x and chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('WOOOW gratulacje ukończenia gry.', font_A, (255, 0, 0), screen, 100, 300)
+            draw_text('WOOOW Przeszedłeś kolejny poziom.', font_A, (255, 0, 0), screen, 100, 300)
+            py.display.flip()
+            time.sleep(3)
+
+            level_4()
+
+        py.display.flip()
+        mainClock.tick(60)
+
+
+def level_4():
+    global click
+    click = False
+
+    global platforma, platforma2, platforma3
+
+    running = True
+
+    # dane pozycji i rozmiaru gracza
+    y_chopek = 500
+    x_chopek = 640
+    chopek_width = 25
+    chopek_height = 64
+
+    # dane pozycji i rozmiaru przeciwnika
+    y_wrog_1 = 500
+    x_wrog_1 = 220
+    wrog_width = 46
+    wrog_height = 63
+
+    y_wrog_2 = 310
+    x_wrog_2 = 260
+
+    # dane pozycji i rozmiaru portalu
+    x_nagroda = 20
+    y_nagroda = 210
+    nagroda_width = 70
+    nagroda_height = 100
+
+    # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
+    animacje = py.sprite.Group()
+    nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
+    wrog_1 = Przeciwnik(x_wrog_1, y_wrog_1, wrog_width, wrog_height, 600)
+    wrog_2 = Przeciwnik(x_wrog_2, y_wrog_2, wrog_width, wrog_height, 440)
+    animacje.add(nagroda)
+    chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
+
+    # dane dla platform
+    bx_block_1 = 476
+    by_block_1 = 500
+    bblock_width_1 = 50
+    bblock_height_1 = 20
+
+    bx_block_2 = 280
+    by_block_2 = 380
+    bblock_width_2 = 160
+
+    bx_block_3 = 40
+    by_block_3 = 300
+    bblock_width_3 = 80
+
+    # położnie platform
+    platforma = Blok(bx_block_1, by_block_1, bblock_width_1, bblock_height_1)
+    platforma2 = Blok(bx_block_2, by_block_2, bblock_width_2, bblock_height_1)
+    platforma3 = Blok(bx_block_3, by_block_3, bblock_width_3, bblock_height_1)
+
+    while running:
+
+        tlo = py.image.load('tła/tło 2.png')
+
+        screen.fill((0, 0, 0))
+        screen.blit(tlo, (0, 0))
+        animacje.draw(screen)
+        animacje.update()
+        przycisk_main(700, 5)
+        platforma.draw()
+        platforma2.draw()
+        platforma3.draw()
+        wrog_1.draw()
+        wrog_2.draw()
+        chopek.draw()
+
+        py.display.update()
+        mainClock.tick(60)
+
+        # ruch gracza
+
+        chopek.ruch()
+        chopek.on_the_ground()
+
+        # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
+
+        if chopek.x < wrog_1.x + wrog_1.width and chopek.x + chopek.width > wrog_1.x\
+                and wrog_1.y <= chopek.y < wrog_1.y + wrog_1.height / 2:
+            screen.fill((0, 0, 0))
+            draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
+            py.display.flip()
+            time.sleep(3)
+            running = False
+            main_menu()
+
+        if chopek.x < wrog_2.x + wrog_2.width and chopek.x + chopek.width > wrog_2.x\
+                and wrog_2.y <= chopek.y < wrog_2.y + wrog_2.height / 2:
+            screen.fill((0, 0, 0))
+            draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
+            py.display.flip()
+            time.sleep(3)
+            running = False
+            main_menu()
+
+        if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x and chopek.y >= nagroda.y:
+            screen.fill((0, 0, 0))
+            draw_text('BRAWO!!! Gratuluje przejścia kolejnego :D', font_A, (255, 0, 0), screen, 100, 300)
+            py.display.flip()
+            time.sleep(3)
+
+            level_5()
+
+        py.display.flip()
+        mainClock.tick(60)
+
+
+def level_5():
+    global click
+    click = False
+
+    global platforma, platforma2, platforma3
+
+    running = True
+
+    # dane pozycji i rozmiaru gracza
+    y_chopek = 500
+    x_chopek = 640
+    chopek_width = 25
+    chopek_height = 64
+
+    # dane pozycji i rozmiaru przeciwnika
+    y_wrog_1 = 500
+    x_wrog_1 = 220
+    wrog_width = 46
+    wrog_height = 63
+
+    y_wrog_2 = 310
+    x_wrog_2 = 260
+
+    # dane pozycji i rozmiaru portalu
+    x_nagroda = 20
+    y_nagroda = 210
+    nagroda_width = 70
+    nagroda_height = 100
+
+    # początki zmian na klasy i animacje wrzucone zostaną do jednej grupy po czym wczytane na ekran
+    animacje = py.sprite.Group()
+    nagroda = Portal(x_nagroda, y_nagroda, nagroda_width, nagroda_height)
+    wrog_1 = Przeciwnik(x_wrog_1, y_wrog_1, wrog_width, wrog_height, 600)
+    wrog_2 = Przeciwnik(x_wrog_2, y_wrog_2, wrog_width, wrog_height, 440)
+    animacje.add(nagroda)
+    chopek = Gracz(x_chopek, y_chopek, chopek_width, chopek_height)
+
+    # dane dla platform
+    cx_block_1 = 476
+    cy_block_1 = 500
+    cblock_width_1 = 50
+    cblock_height_1 = 20
+
+    cx_block_2 = 280
+    cy_block_2 = 380
+    cblock_width_2 = 160
+
+    cx_block_3 = 40
+    cy_block_3 = 300
+    cblock_width_3 = 80
+
+    # położnie platform
+    platforma = Blok(cx_block_1, cy_block_1, cblock_width_1, cblock_height_1)
+    platforma2 = Blok(cx_block_2, cy_block_2, cblock_width_2, cblock_height_1)
+    platforma3 = Blok(cx_block_3, cy_block_3, cblock_width_3, cblock_height_1)
+
+    while running:
+
+        tlo = py.image.load('tła/tło 2.png')
+
+        screen.fill((0, 0, 0))
+        screen.blit(tlo, (0, 0))
+        animacje.draw(screen)
+        animacje.update()
+        przycisk_main(700, 5)
+        platforma.draw()
+        platforma2.draw()
+        platforma3.draw()
+        wrog_1.draw()
+        wrog_2.draw()
+        chopek.draw()
+
+        py.display.update()
+        mainClock.tick(60)
+
+        # ruch gracza
+
+        chopek.ruch()
+        chopek.on_the_ground()
+
+        # informacje wyskakujące w zależności czy gracz wygrał czy przegrał
+
+        if chopek.x < wrog_1.x + wrog_1.width and chopek.x + chopek.width > wrog_1.x\
+                and wrog_1.y <= chopek.y < wrog_1.y + wrog_1.height / 2:
+            screen.fill((0, 0, 0))
+            draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
+            py.display.flip()
+            time.sleep(3)
+            running = False
+            main_menu()
+
+        if chopek.x < wrog_2.x + wrog_2.width and chopek.x + chopek.width > wrog_2.x\
+                and wrog_2.y <= chopek.y < wrog_2.y + wrog_2.height / 2:
+            screen.fill((0, 0, 0))
+            draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
+            py.display.flip()
+            time.sleep(3)
+            running = False
+            main_menu()
+
+        if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x and chopek.y >= nagroda.y:
+            screen.fill((0, 0, 0))
+            draw_text('SUPER!! Gratulacje ukończenia gry!! :D', font_A, (255, 0, 0), screen, 100, 300)
             py.display.flip()
             time.sleep(3)
 

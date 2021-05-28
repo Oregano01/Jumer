@@ -48,8 +48,6 @@ Aktualnie zaimplementowane element do gry:
 
 -Zakładka wyboru poziomu w menu głównym
 
--Kolizja z platrformami, po których gracz będzie się przemieszczał
-
 -Więcej klatek animacji, aby były płynniejsze oraz dokładniejsze,a tick rate mógłbyc stały w granicach 60 fps dla lepszej płynności 
  
 -Wyjęcie głównej funkcji "running" z definicji
@@ -58,4 +56,11 @@ Aktualnie zaimplementowane element do gry:
 
 -Zapisy Gry(opcjonalne)
  
+ # Prace (Raport 3)
  
+ W aktualnej wersji nastała duża zmiana, jeżeli chodzi o funkcjonalnośc grawitacji, ponieważ została od nowa stworzona funkcja odpowiedzialna za działanie grawitacji i przyciąganie postaci do ziemi. Następnie przy pomocy dodanej definicji w klasie Gracz "On_the_ground" sprawdzamy czy nasza postać znajduje się na jakiejś powierzchni np. podłoże mapy lub platforma. Sama grawitacja w tej wersji gry oddziałowuje na naszą postać przez cały czas działania.
+Kolizja z platformami, która była planowana działa i jst możliwość chodzenia pod i na platformie. 
+Globalna definicja z przyciskiem Main Menu, która jest wykorzystywana w każdej zkładce, Twórców, Opcji oraz w konkretnych poziomach gry.
+Dodany został nowy przeciwnik w formie klasy wraz z animacją. 
+Platformy glbalnie definiowane w celu wykorzystania ich w klasie "Gracz".
+Dodane zostały 2 dodatkowe poziomy jest ich aktualnie 5. 

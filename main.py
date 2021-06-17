@@ -227,32 +227,31 @@ class Gracz(object):
 
         # kolizja z platformami
 
-        if (self.x + self.width) > platforma.x and self.x < (platforma.x + platforma.width)\
+        if (self.x + (self.width/2)) > platforma.x and self.x < (platforma.x + platforma.width - (self.width/4)) \
                 and platforma.y < (self.y + self.height) < (platforma.y + platforma.height):
-            print('jest')
             self.y = platforma.y - self.height
             self.jump = 0
             self.in_air = False
 
-        if (self.x + self.width) > platforma2.x and self.x < (platforma2.x + platforma2.width) \
+        if (self.x + (self.width/2)) > platforma2.x and self.x < (platforma2.x + platforma2.width - (self.width/4)) \
                 and platforma2.y < (self.y + self.height) < (platforma2.y + platforma2.height):
             self.y = platforma2.y - self.height
             self.jump = 0
             self.in_air = False
 
-        if (self.x + self.width) > platforma3.x and self.x < (platforma3.x + platforma3.width) \
+        if (self.x + (self.width/2)) > platforma3.x and self.x < (platforma3.x + platforma3.width - (self.width/4)) \
                 and platforma3.y < (self.y + self.height) < (platforma3.y + platforma3.height):
             self.y = platforma3.y - self.height
             self.jump = 0
             self.in_air = False
 
-        if (self.x + self.width) > platforma4.x and self.x < (platforma4.x + platforma4.width) \
+        if (self.x + (self.width/2)) > platforma4.x and self.x < (platforma4.x + platforma4.width - (self.width/4)) \
                 and platforma4.y < (self.y + self.height) < (platforma4.y + platforma4.height):
             self.y = platforma4.y - self.height
             self.jump = 0
             self.in_air = False
 
-        if (self.x + self.width) > platforma5.x and self.x < (platforma5.x + platforma5.width) \
+        if (self.x + (self.width/2)) > platforma5.x and self.x < (platforma5.x + platforma5.width - (self.width/4)) \
                 and platforma5.y < (self.y + self.height) < (platforma5.y + platforma5.height):
             self.y = platforma5.y - self.height
             self.jump = 0

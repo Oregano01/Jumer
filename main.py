@@ -501,13 +501,13 @@ def level_2():
 
     # dane dla platform
     ax_block_1 = 476
-    ay_block_1 = 450
+    ay_block_1 = 460
     ablock_width_1 = 50
     ablock_height_1 = 20
 
     ax_block_2 = 280
     ay_block_2 = 380
-    ablock_width_2 = 160
+    ablock_width_2 = 200
 
     ax_block_3 = 40
     ay_block_3 = 300

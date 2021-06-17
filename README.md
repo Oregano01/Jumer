@@ -48,14 +48,12 @@ Aktualnie zaimplementowane element do gry:
 
 -Zakładka wyboru poziomu w menu głównym
 
--Więcej klatek animacji, aby były płynniejsze oraz dokładniejsze,a tick rate mógłbyc stały w granicach 60 fps dla lepszej płynności 
- 
--Wyjęcie głównej funkcji "running" z definicji
- 
 -Efekty dźwiękowe(opcjonalne)
 
--Zapisy Gry(opcjonalne)
- 
+-Poprawa kolizji z blokami oraz przeciwnikami
+
+-Redesign Poziomów oraz grafik po zwycięstwie
+
  # Prace (Raport 3)
  
  W aktualnej wersji nastała duża zmiana, jeżeli chodzi o funkcjonalnośc grawitacji, ponieważ została od nowa stworzona funkcja odpowiedzialna za działanie grawitacji i przyciąganie postaci do ziemi. Następnie przy pomocy dodanej definicji w klasie Gracz "On_the_ground" sprawdzamy czy nasza postać znajduje się na jakiejś powierzchni np. podłoże mapy lub platforma. Sama grawitacja w tej wersji gry oddziałowuje na naszą postać przez cały czas działania.

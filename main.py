@@ -46,7 +46,7 @@ class Portal(py.sprite.Sprite):                     # klasa odpowiedzialna za po
         self.image = self.klatki[int(self.aktualna_klatka)]
 
 
-class Przeciwnik(py.sprite.Sprite):             # klasa odpowiedzialna za działanie przeciwnika
+class Przeciwnik(object):             # klasa odpowiedzialna za działanie przeciwnika
     def __init__(self, x, y, width, height, granica):
         super().__init__()
         self.klatki = [py.image.load('elementy/M1.png'), py.image.load('elementy/M2.png'),
@@ -807,7 +807,7 @@ def level_4():
             main_menu()
 
         if chopek.x < flame.x + flame.width and chopek.x + chopek.width > flame.x\
-                and flame.y <= chopek.y < flame.y + flame.height / 2:
+                and chopek.y < flame.y + flame.height and chopek.y + chopek.height > flame.y:
             screen.fill((0, 0, 0))
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()

@@ -360,6 +360,16 @@ def przycisk_main(x, y):
                 click = True
 
 
+def fadeout(width, height):
+    fade = py.Surface((width, height))
+    fade.fill((0, 0, 0))
+    for alpha in range(0, 300):
+        fade.set_alpha(alpha)
+        screen.blit(fade, (0, 0))
+        py.display.update()
+        py.time.delay(10)
+
+
 # dane pozycji i rozmiaru platformy
 
 x_block_1 = 476
@@ -449,15 +459,18 @@ def level_1():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x \
                 and nagroda.y + nagroda.height > chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text(' Gratuluję, kolejny poziom na ciebie czeka! :) ', font_A, (255, 0, 0), screen, 100, 300)
+
+            tlo = py.image.load('tła/lvl1.png')
+            screen.blit(tlo, (0, 0))
             py.display.flip()
             time.sleep(3)
-
+            fadeout(800, 600)
             level_2()
 
         py.display.flip()
@@ -556,6 +569,7 @@ def level_2():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
@@ -565,15 +579,18 @@ def level_2():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x \
                 and nagroda.y + nagroda.height > chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('BRAWO!!! Gratuluje przejścia poziomu :D', font_A, (255, 0, 0), screen, 100, 300)
+            tlo = py.image.load('tła/lvl2.png')
+            screen.blit(tlo, (0, 0))
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
 
             level_3()
 
@@ -634,9 +651,9 @@ def level_3():
     dx_block_4 = 250
     dy_block_4 = 150
 
-    dx_block_5 = 550
+    dx_block_5 = 580
     dy_block_5 = 200
-    dblock_width_2 = 110
+    dblock_width_2 = 125
 
     platforma = Blok(dx_block_1, dy_block_1, dblock_width_1, dblock_height_1)
     platforma2 = Blok(dx_block_2, dy_block_2, dblock_width_2, dblock_height_1)
@@ -678,6 +695,7 @@ def level_3():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
@@ -687,15 +705,18 @@ def level_3():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x\
                 and nagroda.y + nagroda.height > chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('WOOOW Przeszedłeś kolejny poziom.', font_A, (255, 0, 0), screen, 100, 300)
+            tlo = py.image.load('tła/lvl3.png')
+            screen.blit(tlo, (0, 0))
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
 
             level_4()
 
@@ -803,6 +824,7 @@ def level_4():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
@@ -812,15 +834,18 @@ def level_4():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x \
                 and nagroda.y + nagroda.height > chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('BRAWO!!! Gratuluje przejścia kolejnego :D', font_A, (255, 0, 0), screen, 100, 300)
+            tlo = py.image.load('tła/lvl4.png')
+            screen.blit(tlo, (0, 0))
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
 
             level_5()
 
@@ -916,6 +941,7 @@ def level_5():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
@@ -925,15 +951,18 @@ def level_5():
             draw_text(' PRZEGRAŁEŚ :(', font_B, (255, 0, 0), screen, 250, 300)
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
             running = False
             main_menu()
 
         if chopek.x < nagroda.x + nagroda.width and chopek.x + chopek.width > nagroda.x \
                 and nagroda.y + nagroda.height > chopek.y >= nagroda.y:
             screen.fill((0, 0, 0))
-            draw_text('SUPER!! Gratulacje ukończenia gry!! :D', font_A, (255, 0, 0), screen, 100, 300)
+            tlo = py.image.load('tła/lvl5.png')
+            screen.blit(tlo, (0, 0))
             py.display.flip()
             time.sleep(3)
+            fadeout(800, 600)
 
             main_menu()
 
